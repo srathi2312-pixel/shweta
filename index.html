@@ -1,0 +1,245 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>College Library Management System</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+</head>
+<body class="bg-gray-100 font-sans">
+
+  <!-- Student Login Section -->
+  <div id="loginSection" class="flex justify-center items-center min-h-screen bg-gray-200">
+    <div class="bg-white p-8 rounded-lg shadow-md w-96">
+      <h2 class="text-2xl font-bold mb-6 text-center text-blue-700">Student Login</h2>
+      <form id="loginForm">
+        <div class="mb-4">
+          <label for="uid" class="block text-gray-700 mb-1">User ID:</label>
+          <input type="text" id="uid" name="uid" required
+            class="w-full px-3 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500">
+        </div>
+        <div class="mb-4">
+          <label for="password" class="block text-gray-700 mb-1">Password:</label>
+          <input type="password" id="password" name="password" required
+            class="w-full px-3 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500">
+        </div>
+        <button type="submit"
+          class="w-full bg-blue-600 text-white py-2 rounded-lg hover:bg-blue-700 transition duration-200">
+          Login
+        </button>
+      </form>
+      <div id="message" class="message text-center mt-3"></div>
+    </div>
+  </div>
+
+  <!-- Library Dashboard Section (Initially Hidden) -->
+  <div id="dashboardSection" class="hidden">
+    <!-- Navigation -->
+    <nav class="bg-blue-900 text-white p-4 shadow-lg">
+      <div class="container mx-auto flex justify-between items-center">
+        <div class="flex items-center space-x-3">
+          <i class="fas fa-book-reader text-2xl"></i>
+          <h1 class="text-2xl font-bold">College Library Management System</h1>
+        </div>
+        <div class="flex items-center space-x-4">
+          <span id="welcomeUser" class="hidden md:inline">Welcome, Student</span>
+          <div class="w-8 h-8 bg-blue-700 rounded-full flex items-center justify-center">
+            <i class="fas fa-user"></i>
+          </div>
+        </div>
+      </div>
+    </nav>
+
+    <div class="flex">
+      <!-- Sidebar -->
+      <div class="sidebar bg-blue-800 text-white w-64 space-y-6 py-7 px-2 fixed inset-y-0 left-0 transform -translate-x-64 md:translate-x-0 transition duration-200 ease-in-out">
+        <div class="text-white flex items-center space-x-2 px-4">
+          <i class="fas fa-book-open text-2xl"></i>
+          <span class="text-2xl font-extrabold">Menu</span>
+        </div>
+        <nav>
+          <a href="#" onclick="showSection('dashboard')" class="py-2.5 px-4 rounded flex items-center space-x-2 hover:bg-blue-700"><i class="fas fa-chart-line"></i><span>Dashboard</span></a>
+          <a href="#" onclick="showSection('books')" class="py-2.5 px-4 rounded flex items-center space-x-2 hover:bg-blue-700"><i class="fas fa-book"></i><span>Books</span></a>
+          <a href="#" onclick="showSection('members')" class="py-2.5 px-4 rounded flex items-center space-x-2 hover:bg-blue-700"><i class="fas fa-users"></i><span>Members</span></a>
+          <a href="#" onclick="showSection('teachers')" class="py-2.5 px-4 rounded flex items-center space-x-2 hover:bg-blue-700"><i class="fas fa-chalkboard-teacher"></i><span>Teachers</span></a>
+          <a href="#" onclick="showSection('transactions')" class="py-2.5 px-4 rounded flex items-center space-x-2 hover:bg-blue-700"><i class="fas fa-exchange-alt"></i><span>Transactions</span></a>
+          <a href="#" onclick="showSection('reports')" class="py-2.5 px-4 rounded flex items-center space-x-2 hover:bg-blue-700"><i class="fas fa-chart-bar"></i><span>Reports</span></a>
+        </nav>
+      </div>
+
+      <!-- Main Content -->
+      <div class="ml-0 md:ml-64 flex-1 p-6">
+        <!-- Dashboard Section -->
+        <div id="dashboard" class="section">
+          <h2 class="text-2xl font-bold mb-4">Welcome to the Library Dashboard</h2>
+          <p class="text-gray-700">You are logged in successfully!</p>
+
+          <!-- Stats Card -->
+          <div class="grid grid-cols-1 md:grid-cols-2 gap-6 mt-6">
+            <!-- Total Students -->
+            <div class="p-6 bg-white rounded-lg shadow flex flex-col justify-between">
+              <div>
+                <h3 class="text-xl font-bold text-gray-700 mb-2">Total Students</h3>
+                <p id="totalStudentsCount" class="text-3xl font-extrabold text-blue-600">0</p>
+              </div>
+              <button onclick="showMembers()" class="mt-4 bg-blue-600 text-white px-4 py-2 rounded-lg hover:bg-blue-700 transition w-max">
+                View Members
+              </button>
+            </div>
+
+            <!-- Total Teachers -->
+            <div class="p-6 bg-white rounded-lg shadow flex flex-col justify-between">
+              <div>
+                <h3 class="text-xl font-bold text-gray-700 mb-2">Total Teachers</h3>
+                <p id="totalTeachersCount" class="text-3xl font-extrabold text-green-600">0</p>
+              </div>
+              <button onclick="showTeachers()" class="mt-4 bg-green-600 text-white px-4 py-2 rounded-lg hover:bg-green-700 transition w-max">
+                View Teachers
+              </button>
+            </div>
+          </div>
+        </div>
+
+        <!-- Books Section -->
+        <div id="books" class="section hidden">
+          <h2 class="text-2xl font-bold mb-4">Books Management</h2>
+          <input type="text" id="searchInput" placeholder="Search books..."
+            class="w-full px-3 py-2 border rounded-lg mb-4 focus:outline-none focus:ring-2 focus:ring-blue-500">
+          <div id="bookList" class="space-y-2"></div>
+        </div>
+
+        <!-- Members Section -->
+        <div id="members" class="section hidden">
+          <h2 class="text-2xl font-bold mb-4">Library Members</h2>
+          <div id="memberList" class="space-y-3"></div>
+        </div>
+
+        <!-- Teachers Section -->
+        <div id="teachers" class="section hidden">
+          <h2 class="text-2xl font-bold mb-4">Teachers List</h2>
+          <ul id="teacherList" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4"></ul>
+        </div>
+
+        <!-- Transactions -->
+        <div id="transactions" class="section hidden">
+          <h2 class="text-2xl font-bold mb-4">Transactions</h2>
+          <p class="text-gray-700">Transactions content goes here...</p>
+        </div>
+
+        <!-- Reports -->
+        <div id="reports" class="section hidden">
+          <h2 class="text-2xl font-bold mb-4">Reports</h2>
+          <p class="text-gray-700">Reports content goes here...</p>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    // Common password
+    const commonPassword = "welcome123";
+
+    // Handle login
+    document.getElementById("loginForm").addEventListener("submit", function (event) {
+      event.preventDefault();
+      const uid = document.getElementById("uid").value.trim();
+      const password = document.getElementById("password").value;
+
+      if (uid !== "" && password === commonPassword) {
+        document.getElementById("message").innerText = `Login successful! Welcome, ${uid}`;
+        document.getElementById("message").className = "text-green-600 font-bold";
+        setTimeout(() => {
+          document.getElementById("loginSection").classList.add("hidden");
+          document.getElementById("dashboardSection").classList.remove("hidden");
+          document.getElementById("welcomeUser").innerText = `Welcome, ${uid}`;
+          showSection("dashboard");
+        }, 1000);
+      } else {
+        document.getElementById("message").innerText = "Invalid User ID or Password.";
+        document.getElementById("message").className = "text-red-600 font-bold";
+      }
+    });
+
+    // Section navigation
+    function showSection(sectionId) {
+      document.querySelectorAll(".section").forEach(sec => sec.classList.add("hidden"));
+      document.getElementById(sectionId).classList.remove("hidden");
+      if(sectionId === "teachers") renderTeachers();
+    }
+
+    function showMembers() { showSection("members"); }
+    function showTeachers() { showSection("teachers"); }
+
+    // Books Data
+    const books = [
+      "JavaScript Basics", "Advanced CSS", "HTML for Beginners", "Python Programming",
+      "Data Structures in C++", "Machine Learning Fundamentals",
+      "Database Management Systems", "Computer Networks"
+    ];
+    const bookList = document.getElementById("bookList");
+    function renderBooks(filteredBooks) {
+      bookList.innerHTML = "";
+      if(filteredBooks.length === 0){
+        bookList.innerHTML = "<p class='text-gray-500'>No books found.</p>";
+        return;
+      }
+      filteredBooks.forEach(book=>{
+        const div = document.createElement("div");
+        div.className = "p-3 bg-white rounded shadow";
+        div.textContent = book;
+        bookList.appendChild(div);
+      });
+    }
+    renderBooks(books);
+    document.getElementById("searchInput").addEventListener("input", function(){
+      const query = this.value.toLowerCase();
+      const filteredBooks = books.filter(book=>book.toLowerCase().includes(query));
+      renderBooks(filteredBooks);
+    });
+
+    // Members / Students Data
+    const members = [
+      { uid: "S001", name: "Raman" },
+      { uid: "S002", name: "Anjali" },
+      { uid: "S003", name: "Arman" },
+      { uid: "S004", name: "Priya" },
+      { uid: "S005", name: "Shranjli" },
+      { uid: "S006", name: "Neha" }
+    ];
+    const memberList = document.getElementById("memberList");
+    function renderMembers(){
+      memberList.innerHTML = "";
+      members.forEach(member=>{
+        const div = document.createElement("div");
+        div.className = "p-4 bg-white rounded-lg shadow flex justify-between items-center";
+        div.innerHTML = `
+          <div>
+            <p class="font-bold text-gray-800">Name: ${member.name}</p>
+            <p class="text-gray-600">UID: ${member.uid}</p>
+          </div>
+        `;
+        memberList.appendChild(div);
+      });
+      // Update total students dynamically
+      document.getElementById("totalStudentsCount").innerText = members.length;
+    }
+    renderMembers();
+
+    // Teachers Data
+    const teachers = ["Amit Sharma", "Priya Verma", "Rajesh Kumar", "Neha Gupta", "Arun Singh", "Tarun Yadav", "Simran Kaur", "Vikas Jain", "Anjali Mehta", "Suresh Rao"];
+    const teacherList = document.getElementById("teacherList");
+    function renderTeachers(){
+      teacherList.innerHTML = "";
+      teachers.forEach(name=>{
+        const li = document.createElement("li");
+        li.className = "p-3 bg-white rounded-lg shadow text-gray-800 font-semibold";
+        li.textContent = name;
+        teacherList.appendChild(li);
+      });
+      document.getElementById("totalTeachersCount").innerText = teachers.length;
+    }
+    renderTeachers();
+  </script>
+</body>
+</html>
